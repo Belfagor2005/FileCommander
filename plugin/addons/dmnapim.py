@@ -91,7 +91,7 @@ def f(z):
     add = [0, 0xd, 0x10, 0xb, 0x5]
 
     b = []
-    for i in xrange(len(idx)):
+    for i in range(len(idx)):  # Changed xrange to range for compatibility
         a = add[i]
         m = mul[i]
         i = idx[i]
@@ -138,18 +138,18 @@ def get_subtitle(digest, lang="PL"):
     return sub
 
 
-def detect_format(list):
+def detect_format(lines):
     """
     Detect the format of input subtitles file.
     input: contents of a file as list
-    returns: format (srt, tmp, mdvd) or "" if unknown
+    returns: format (srt, tmp, mdvd, sub2, mpl2) or "" if unknown
     """
-    re_mdvd = re.compile("^\{(\d+)\}\{(\d*)\}\s*(.*)")
-    re_srt = re.compile("^(\d+):(\d+):(\d+),\d+\s*-->.*")
-    re_tmp = re.compile("^(\d+):(\d+):(\d+):(.*)")
-    re_sub2 = re.compile("^(\d+):(\d+):(\d+)\.\d+\s*\,.*")
-    re_mpl2 = re.compile("^\[(\d+)\]\[(\d+)\]\s*(.*)")
-    for line in list:
+    re_mdvd = re.compile(r"^\{(\d+)\}\{(\d*)\}\s*(.*)")
+    re_srt = re.compile(r"^(\d+):(\d+):(\d+),\d+\s*-->.*")
+    re_tmp = re.compile(r"^(\d+):(\d+):(\d+):(.*)")
+    re_sub2 = re.compile(r"^(\d+):(\d+):(\d+)\.\d+\s*\,.*")
+    re_mpl2 = re.compile(r"^\[(\d+)\]\[(\d+)\]\s*(.*)")
+    for line in lines:
         if re_mdvd.match(line):
             return "mdvd"
         elif re_srt.match(line):
@@ -169,7 +169,7 @@ def read_mdvd(list, fps):
     input: contents of a file as list
     returns: list of subtitles in form: [[time_start in secs, time_end in secs, line1, ...],....]
     """
-    re1 = re.compile("^\{(\d+)\}\{(\d*)\}\s*(.*)")
+    re1 = re.compile(r"^\{(\d+)\}\{(\d*)\}\s*(.*)")
 
     subtitles = []
     while len(list) > 0:
@@ -201,7 +201,7 @@ def read_mpl2(list):
     input: contents of a file as list
     returns: list of subtitles in form: [[time_start in secs, time_end is secs, line1, ...],.....]
     """
-    re1 = re.compile("^\[(\d+)\]\[(\d+)\]\s*(.*)")
+    re1 = re.compile(r"^\[(\d+)\]\[(\d+)\]\s*(.*)")
     subtitles = []
     while len(list) > 0:
         m = re1.match(list.pop(0), 0)
@@ -221,7 +221,7 @@ def read_sub2(list):
     input: contents of a file as list
     returns: list of subtitles in form: [[time_dep, time_end, line1, ...],[time_dep, time_end, line1, ...],....]
     """
-    re1 = re.compile("^(\d+):(\d+):(\d+)\.(\d+)\s*\,\s*(\d+):(\d+):(\d+)\.(\d+).*$")
+    re1 = re.compile(r"^(\d+):(\d+):(\d+)\.(\d+)\s*\,\s*(\d+):(\d+):(\d+)\.(\d+).*$")
     subtitles = []
     try:
         while len(list) > 0:
@@ -245,9 +245,9 @@ def read_srt(list):
     input: contents of a file as list
     returns: list of subtitles in form: [[time_dep, time_end, line1, ...],[time_dep, time_end, line1, ...],....]
     """
-    re1 = re.compile("^(\d+)\s*$")
-    re2 = re.compile("^(\d+):(\d+):(\d+),(\d+)\s*-->\s*(\d+):(\d+):(\d+),(\d+).*$")
-    re3 = re.compile("^\s*$")
+    re1 = re.compile(r"^(\d+)\s*$")
+    re2 = re.compile(r"^(\d+):(\d+):(\d+),(\d+)\s*-->\s*(\d+):(\d+):(\d+),(\d+).*$")
+    re3 = re.compile(r"^\s*$")
     subtitles = []
     try:
         while len(list) > 0:
@@ -272,7 +272,7 @@ def read_tmp(list):
     input: contents of a file as list
     returns: list of subtitles in form: [[time_dep, time_end, line1, ...],[time_dep, time_end, line1, ...],....]
     """
-    re1 = re.compile("^(\d+):(\d+):(\d+):(.*)")
+    re1 = re.compile(r"^(\d+):(\d+):(\d+):(.*)")
     subtitles = []
     subs = {}
     while len(list) > 0:
@@ -342,7 +342,7 @@ def get_split_times(str):
     returns: list of times
     """
     tlist = str.split(",")
-    re1 = re.compile("^(\d+):(\d+):(\d+)")
+    re1 = re.compile(r"^(\d+):(\d+):(\d+)")
     times = []
     for t in tlist:
         m = re1.match(t, 0)
@@ -366,12 +366,12 @@ def read_subs(file, fmt, fps):
         return read_tmp(subs)
     elif fmt == "srt":
         return read_srt(subs)
-    elif fmt == "mdvd":
-        if fps == -1:
-            fps = detect_file_fps(file)
-            if not fps:
-                fps = detect_fps(subs)
-        return read_mdvd(subs, fps)
+    # elif fmt == "mdvd":
+        # if fps == -1:
+            # fps = detect_file_fps(file)
+            # if not fps:
+                # fps = detect_fps(subs)
+        # return read_mdvd(subs, fps)
     elif fmt == "auto":
         fmt = detect_format(subs)
         sys.stderr.write("Guessing subs format .. %s\n" % fmt)
@@ -393,7 +393,7 @@ def napiprojekt_fps(digest):
         fps = float([re.match(r".*<fps>(.*)</fps>.*", x).groups(0)[0] for x in urllib2.urlopen(url) if x.find('<fps>') > 0][0])
     except:
         fps = 23.976
-    return floatfps
+    return float(fps)
 
 
 def read_sub(fmt, subs):
@@ -444,9 +444,9 @@ def to_srt_utf8(subs_org, file, digest=0, info="", fps=0):
 
 
 def get_sub_from_napi(file, fps=0):
-        digest = hashFile(file)['npb']
-        if digest:
-                to_srt_utf8(get_subtitle(digest), file, digest, fps=fps)
+    digest = hashFile(file)['npb']
+    if digest:
+        to_srt_utf8(get_subtitle(digest), file, digest, fps=fps)
 
 
 def convert(file, src, fps=0):
@@ -458,25 +458,26 @@ def convert(file, src, fps=0):
         print("  Error: %s" % (sys.exc_info()[1]))
 
 
-prere = (
-    ("[^\w\d]", " "),
-    ("[\.]", " "),
-    ("[\[\]-_]", " "),
-    ("^[^-\s]*-", " "),
-    ("_", " "),
-    (" (720p|1080i|1080p)( |$)+", " "),
-    (" (x264|blu-ray|bluray|hdtv|xvid)( |$)+", " "),
-    (" (eng|rus)( |$)+", " "),
-    (" (oar)( |$)+", " "),
-    (" (miniseries)( |$)+", " "),
-    (" (dts|dd5|ac3|stereo)( |$)+", " "),
-    (" (xbox)( |$)+", " "),
-    (" [\[](720p|1080i|1080p)[\]]( |$)+", " ")
-)
+prere = [
+    (r"[^\w\d]", " "),
+    (r"\.", " "),
+    (r"[\[\]-_]", " "),
+    (r"^[^-\s]*-", " "),
+    (r"_", " "),
+    (r" (720p|1080i|1080p)( |$)+", " "),
+    (r" (x264|blu-ray|bluray|hdtv|xvid)( |$)+", " "),
+    (r" (eng|rus)( |$)+", " "),
+    (r" (oar)( |$)+", " "),
+    (r" (miniseries)( |$)+", " "),
+    (r" (dts|dd5|ac3|stereo)( |$)+", " "),
+    (r" (xbox)( |$)+", " "),
+    (r" \[[\]]( |$)+", " ")
+]
 
-tvshowRegex = re.compile('(?P<show>.*)S(?P<season>[0-9]{2})E(?P<episode>[0-9]{2}).(?P<teams>.*)', re.IGNORECASE)
-tvshowRegex2 = re.compile('(?P<show>.*).(?P<season>[0-9]{1,2})x(?P<episode>[0-9]{1,2}).(?P<teams>.*)', re.IGNORECASE)
-movieRegex = re.compile('(?P<movie>.*)[\.|\[|\(| ]{1}(?P<year>(?:(?:19|20)[0-9]{2}))(?P<teams>.*)', re.IGNORECASE)
+
+tvshowRegex = re.compile(r'(?P<show>.*)S(?P<season>[0-9]{2})E(?P<episode>[0-9]{2}).(?P<teams>.*)', re.IGNORECASE)
+tvshowRegex2 = re.compile(r'(?P<show>.*).(?P<season>[0-9]{1,2})x(?P<episode>[0-9]{1,2}).(?P<teams>.*)', re.IGNORECASE)
+movieRegex = re.compile(r'(?P<movie>.*)[\.|\[|\(| ]{1}(?P<year>(?:(?:19|20)[0-9]{2}))(?P<teams>.*)', re.IGNORECASE)
 
 
 def parse_name(name):
@@ -501,10 +502,10 @@ def parse_name(name):
             teams, teams.split('.')
             res = {'type': 'tvshow', 'name': tvshow.strip(), 'season': int(season), 'episode': int(episode), 'teams': teams}
         else:
-                matches_movie = movieRegex.match(fn)
-                if matches_movie:
-                        (movie, year, teams) = matches_movie.groups()
-                        res = {'type': 'movie', 'name': movie.strip(), 'year': year, 'teams': teams}
+            matches_movie = movieRegex.match(fn)
+            if matches_movie:
+                (movie, year, teams) = matches_movie.groups()
+                res = {'type': 'movie', 'name': movie.strip(), 'year': year, 'teams': teams}
     return res
 
 
@@ -521,9 +522,9 @@ def find_imdb(path):
                     nfof.append(f)
         for f in nfof:
             for l in open(os.path.join(dir, f)):
-                        m = re.search(r'title\/(?P<imdbid>tt\d{7})', l)
-                        if m and m.group("imdbid"):
-                                ImdbId = m.group("imdbid")
+                m = re.search(r'title\/(?P<imdbid>tt\d{7})', l)
+                if m and m.group("imdbid"):
+                    ImdbId = m.group("imdbid")
     except:
         pass
     return ImdbId
