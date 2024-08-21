@@ -4,13 +4,12 @@
 # ported from OpenATV to OpenPLi by mrvica April 2019
 # fixed, added features, rebuilded in May 2020 ims
 # based on Filebrowser plugin
+# updated from lululla 20240821
 
 from . import _
-
 from Plugins.Plugin import PluginDescriptor
 from Components.config import config, ConfigSubsection, ConfigYesNo
 
-# #################################
 pname = _("File Commander")
 pdesc = _("manage local Files")
 
