@@ -2,7 +2,8 @@
 # -*- coding: iso-8859-1 -*-
 
 from __future__ import print_function
-from .plugin import pname  # , pdesc
+
+from .plugin import pname
 
 # Components
 from Components.config import (
