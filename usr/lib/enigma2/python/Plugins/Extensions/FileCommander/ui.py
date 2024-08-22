@@ -1927,11 +1927,11 @@ class FileCommanderFileStatInfo(Screen, key_actions, stat_info):
                         # 0   100 200 300 400 500
                         # |   |   |   |   |   |
                         # 00000000 1111111111111
-                        MultiContentEntryText(pos = (0, 0), size = (200, 45), font = 0, flags = RT_HALIGN_LEFT, text = 0), # index 0 is a label
-                        MultiContentEntryText(pos = (225, 0), size = (300, 45), font = 0, flags = RT_HALIGN_LEFT, text = 1), # index 1 is the information
+                        MultiContentEntryText(pos = (0, 0), size = (200, 25), font = 0, flags = RT_HALIGN_LEFT, text = 0), # index 0 is a label
+                        MultiContentEntryText(pos = (225, 0), size = (300, 25), font = 0, flags = RT_HALIGN_LEFT, text = 1), # index 1 is the information
                         ],
-                        "fonts": [gFont("Regular", 24)],
-                        "itemHeight": 45,
+                        "fonts": [gFont("Regular", 20)],
+                        "itemHeight": 25,
                         "selectionEnabled": False
                     }
                 </convert>

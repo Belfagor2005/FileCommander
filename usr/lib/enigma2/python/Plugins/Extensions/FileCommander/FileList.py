@@ -6,17 +6,10 @@ from Components.config import config
 
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS, SCOPE_CURRENT_SKIN
 
-from enigma import (
-    RT_HALIGN_LEFT,
-    RT_VALIGN_CENTER,
-    BT_SCALE,
-    eListboxPythonMultiContent,
-    eServiceReference,
-    eServiceCenter,
-    # gFont,
-    # iServiceInformation,
-)
-
+from enigma import RT_HALIGN_LEFT, BT_SCALE, eListboxPythonMultiContent, \
+    eServiceReference, eServiceCenter
+# commented out
+# eServiceReferenceFS,
 from Tools.LoadPixmap import LoadPixmap
 from .addons.key_actions import TEXT_EXTENSIONS
 import skin
@@ -68,8 +61,8 @@ def getPNGByExt(name):
 
 def FileEntryComponent(name, absolute=None, isDir=False, isLink=False):
     res = [(absolute, isDir, isLink)]
-    x, y, w, h = skin.parameters.get("FcFileListName", (65, 0, 1175, 40))
-    res.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, name))
+    x, y, w, h = skin.parameters.get("FcFileListName", (55, 1, 1175, 25))
+    res.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT, name))
     if isLink:
         link_png = LoadPixmap(path=os.path.join(imagePath, "link-arrow.png"))
     else:
@@ -82,7 +75,7 @@ def FileEntryComponent(name, absolute=None, isDir=False, isLink=False):
     else:
         png = getPNGByExt(name)
     if png is not None:
-        x, y, w, h = skin.parameters.get("FcFileListIcon", (10, 0, 35, 35))
+        x, y, w, h = skin.parameters.get("FcFileListIcon", (10, 4, 20, 20))
         res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, w, h, png, None, None, BT_SCALE))
         if link_png is not None:
             res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, w, h, link_png, None, None, BT_SCALE))
@@ -268,8 +261,8 @@ class FileList(FileListBase):
 
 def MultiFileSelectEntryComponent(name, absolute=None, isDir=False, isLink=False, selected=False):
     res = [(absolute, isDir, isLink, selected, name)]
-    x, y, w, h = skin.parameters.get("FcFileListMultiName", (65, 0, 1175, 40))
-    res.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, name))
+    x, y, w, h = skin.parameters.get("FcFileListMultiName", (55, 1, 1175, 25))
+    res.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT, name))
 
     if isLink:
         link_png = LoadPixmap(path=os.path.join(imagePath, "link-arrow.png"))
@@ -283,13 +276,13 @@ def MultiFileSelectEntryComponent(name, absolute=None, isDir=False, isLink=False
     else:
         png = getPNGByExt(name)
     if png is not None:
-        x, y, w, h = skin.parameters.get("FcFileListMultiIcon", (35, 2, 35, 35))
+        x, y, w, h = skin.parameters.get("FcFileListMultiIcon", (30, 4, 20, 20))
         res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, w, h, png, None, None, BT_SCALE))
         if link_png is not None:
             res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, w, h, link_png, None, None, BT_SCALE))
 
     if not name.startswith('<'):
-        x, y, w, h = skin.parameters.get("FcFileListMultiLock", (4, 2, 35, 35))
+        x, y, w, h = skin.parameters.get("FcFileListMultiLock", (4, 0, 25, 25))
         if selected is False:
             icon = LoadPixmap(path=os.path.join(imagePath, "lock_off.png"))
             if not icon:
