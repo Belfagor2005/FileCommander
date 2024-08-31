@@ -1919,19 +1919,19 @@ class FileCommanderScreenFileSelect(Screen, HelpableScreen, key_actions):
 
 class FileCommanderFileStatInfo(Screen, key_actions, stat_info):
     skin = """
-        <screen name="FileCommanderFileStatInfo" position="center,center" size="545,370" title="File/Directory Status Information">
-            <widget name="filename" position="10,0" size="525,46" font="Regular;20"/>
-            <widget source="list" render="Listbox" position="10,60" size="525,300" scrollbarMode="showOnDemand" selectionDisabled="1" transparent="1" >
+        <screen name="FileCommanderFileStatInfo" position="center,center" size="845,570" title="File/Directory Status Information">
+            <widget name="filename" position="10,0" size="766,61" font="Regular; 28" />
+            <widget source="list" render="Listbox" position="14,81" size="767,417" scrollbarMode="showOnDemand" selectionDisabled="1" transparent="1">
                 <convert type="TemplatedMultiContent">
                     {"template": [
                         # 0   100 200 300 400 500
                         # |   |   |   |   |   |
                         # 00000000 1111111111111
                         MultiContentEntryText(pos = (0, 0), size = (200, 45), font = 0, flags = RT_HALIGN_LEFT, text = 0), # index 0 is a label
-                        MultiContentEntryText(pos = (225, 0), size = (300, 45), font = 0, flags = RT_HALIGN_LEFT, text = 1), # index 1 is the information
+                        MultiContentEntryText(pos = (225, 0), size = (500, 45), font = 0, flags = RT_HALIGN_LEFT, text = 1), # index 1 is the information
                         ],
-                        "fonts": [gFont("Regular", 24)],
-                        "itemHeight": 45,
+                        "fonts": [gFont("Regular", 32)],
+                        "itemHeight": 50,
                         "selectionEnabled": False
                     }
                 </convert>
